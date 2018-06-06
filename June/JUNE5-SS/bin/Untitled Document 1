@@ -1,0 +1,4 @@
+#!/bin/bash
+# This is to say salam
+echo "Assalamu alaikum"
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+for types in man bear lion dog sheep
+do
+echo "$types"
+done

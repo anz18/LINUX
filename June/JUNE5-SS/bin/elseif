@@ -1,0 +1,13 @@
+#!/bin/bash
+if [ -e/etc/shadow ]
+then
+echo "Shadow Passwords are enabled"
+if [ -w/etc/shadow ]
+then
+echo "You have permission to edit shadow password"
+else
+echo "You do not have permission to edit shadow passwords"
+fi
+else
+echo "Shadow Passwords are not enabled"
+fi

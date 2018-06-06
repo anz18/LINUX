@@ -1,0 +1,12 @@
+#!/bin/bash
+read -p "Give the name of the file or directory:" USER
+if [ -d/USER]
+then
+  echo "$USER is a Directory"
+  if [ -f/USER]
+  then
+  echo "$USER is a regular file"
+else
+  echo "$USER is any other fle"
+fi
+fi

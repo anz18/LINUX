@@ -1,0 +1,4 @@
+#!/bin/bash
+# This is to say about shell scripting
+echo "Shell scripting is fun"
+
