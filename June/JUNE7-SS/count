@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+file_count() {
+  echo "Enter a directory: "
+  read directory
+  ls -1 -- "$directory" | wc -l
+}
+
+
+
+file_count
