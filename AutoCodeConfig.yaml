@@ -1,25 +1,19 @@
 ---
 genPolicy: "None"
-openAPISpec: "https://13.56.210.25/v2/api-docs"
+openAPISpec: "http://13.56.210.25/v2/api-docs"
 generators:
-- type: "no_params"
+- type: "DDOS"
   assertions:
-  - "@StatusCode == 200"
-  tags: null
+  - "@StatusCode != 401"
+  - "@StatusCode != 404"
+  tags:
+  - "[PCI DSS 3.0] 6.5.2"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
   inactive: true
-  matches: []
-  authors: ""
-- type: "sla"
-  assertions:
-  - "@StatusCode == 200 AND @ResponseTime < 500"
-  tags: null
-  severity: "Major"
-  database: null
-  inactive: false
   matches:
-  - name: null
+  - name: "pageSize, page_size, maxResults, max_results"
     value: null
     methods: null
     denyRoles: null
@@ -29,10 +23,51 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
+  abacResources: null
+- type: "sql_injection_timebound"
+  assertions:
+  - "@ResponseTime < 7000 OR @ResponseTime > 10000"
+  - "@StatusCode != 404"
+  tags:
+  - "OWASP A1"
+  - "[PCI DSS 3.0] 6.5.1"
+  - "OWASP - OTG-INPVAL-005"
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database:
+    name: "MySQL"
+    version: "5.7"
+  inactive: true
+  matches: []
+  authors: ""
+  abacResources: null
+- type: "no_params"
+  assertions:
+  - "@StatusCode == 200"
+  tags:
+  - " OWASP - OTG-CONFIG-006"
+  severity: "Major"
+  database: null
+  inactive: false
+  matches: []
+  authors: ""
+  abacResources: null
+- type: "sla"
+  assertions:
+  - "@StatusCode == 200 AND @ResponseTime < 500"
+  tags: null
+  severity: "Major"
+  database: null
+  inactive: false
+  matches: []
+  authors: ""
+  abacResources: null
 - type: "anonymous_invalid"
   assertions:
   - "@StatusCode == 401 OR @StatusCode == 403"
-  tags: null
+  tags:
+  - "OWASP - OTG-AUTHN-002"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
   inactive: false
@@ -47,13 +82,22 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
+  abacResources: null
 - type: "auth_invalid"
   assertions:
   - "@StatusCode == 401 OR @StatusCode == 403"
-  tags: null
+  tags:
+  - "OWASP A2"
+  - "OWASP A5"
+  - "OWASP A6"
+  - "OWASP A7"
+  - "[PIC DSS 3.0] 6.5.8"
+  - "[PIC DSS 3.0] 6.5.10"
+  - "OTG-AUTHN-004"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
-  inactive: true
+  inactive: false
   matches:
   - name: null
     value: null
@@ -65,10 +109,19 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
+  abacResources: null
 - type: "auth_invalid_empty"
   assertions:
   - "@StatusCode == 401 OR @StatusCode == 403"
-  tags: null
+  tags:
+  - "OWASP A2"
+  - "OWASP A5"
+  - "OWASP A6"
+  - "OWASP A7"
+  - "[PIC DSS 3.0] 6.5.8"
+  - "[PIC DSS 3.0] 6.5.10"
+  - "OTG-AUTHN-004"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
   inactive: false
@@ -83,10 +136,15 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
+  abacResources: null
 - type: "auth_invalid_sql"
   assertions:
   - "@StatusCode == 401 OR @StatusCode == 403"
-  tags: null
+  tags:
+  - "OWASP A1"
+  - "[PCI DSS 3.0] 6.5.1"
+  - "OTG-AUTHN-004"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
   inactive: false
@@ -101,14 +159,17 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
+  abacResources: null
 - type: "rbac"
   assertions:
   - "Disallowed:@StatusCode == 401 OR @StatusCode == 403"
   - "Allowed:@StatusCode != 401 AND @StatusCode != 403"
-  tags: null
+  tags:
+  - "OWASP - OTG-IDENT-001 "
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
-  inactive: true
+  inactive: false
   matches:
   - name: "ROLE_ADMIN,ROLE_PM,ROLE_USER"
     value: null
@@ -120,105 +181,79 @@ generators:
     queryParams: null
     bodyProperties: null
   authors: ""
-- type: "abac"
-  assertions:
-  - "Create:@StatusCode == 200 OR @StatusCode == 201"
-  - "Disallowed:@StatusCode == 401 OR @StatusCode == 403"
-  tags: null
-  severity: "Major"
-  database: null
-  inactive: false
-  matches: []
-  authors: ""
-- type: "DDOS"
-  assertions:
-  - "@StatusCode != 401"
-  - "@StatusCode != 404"
-  tags: null
-  severity: "Major"
-  database: null
-  inactive: false
-  matches:
-  - name: "pageSize, page_size, maxResults, max_results"
-    value: null
-    methods: null
-    denyRoles: null
-    allowRoles: null
-    pathPatterns: null
-    resourceSamples: null
-    queryParams: null
-    bodyProperties: null
-  authors: ""
+  abacResources: null
 - type: "XSS_Injection"
   assertions:
   - "@StatusCode != 200"
   - "@StatusCode != 401"
   - "@StatusCode != 404"
   - "@StatusCode != 500"
-  tags: null
+  tags:
+  - "OWASP A3"
+  - "[PIC DSS 3.0] 6.5.7"
+  - "OWASP - OTG-INPVAL-001"
+  - "OWASP - OTG-INPVAL-002"
+  - "FX Top 10 - API Vulnerability"
   severity: "Major"
   database: null
-  inactive: true
-  matches: []
-  authors: ""
-- type: "sql_injection_timebound"
-  assertions:
-  - "@ResponseTime < 7000 OR @ResponseTime > 10000"
-  - "@StatusCode != 404"
-  tags: null
-  severity: "Major"
-  database:
-    name: "MySQL"
-    version: "5.7"
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "log_Forging"
   assertions:
   - "@StatusCode != 200"
   - "@StatusCode != 401"
   - "@StatusCode != 404"
   - "@StatusCode != 500"
-  tags: null
+  tags:
+  - "OWASP - Log Injection"
   severity: "Major"
   database: null
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "invalid_datatype"
   assertions:
   - "@StatusCode != 401"
   - "@StatusCode != 404"
-  tags: null
+  tags:
+  - "OWASP - OTG-BUSLOGIC-001"
   severity: "Major"
   database: null
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "special_chars "
   assertions:
   - "@StatusCode != 200"
   - "@StatusCode != 401"
   - "@StatusCode != 404"
   - "@StatusCode != 500"
-  tags: null
+  tags:
+  - "OWASP - OTG-BUSLOGIC-001"
   severity: "Major"
   database: null
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "null_value"
   assertions:
   - "@StatusCode != 200"
   - "@StatusCode != 401"
   - "@StatusCode != 404"
   - "@StatusCode != 500"
-  tags: null
+  tags:
+  - "OWASP - OTG-BUSLOGIC-001"
   severity: "Major"
   database: null
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "empty_value"
   assertions:
   - "@StatusCode != 200"
@@ -231,25 +266,16 @@ generators:
   inactive: false
   matches: []
   authors: ""
+  abacResources: null
 - type: "negative_number"
   assertions:
   - "@StatusCode != 401"
   - "@StatusCode != 404"
-  tags: null
+  tags:
+  - "OWASP - OTG-BUSLOGIC-001"
   severity: "Major"
   database: null
   inactive: false
   matches: []
   authors: ""
-- type: "create"
-  assertions:
-  - "@StatusCode != 200"
-  - "@StatusCode != 401"
-  - "@StatusCode != 404"
-  - "@StatusCode != 500"
-  tags: null
-  severity: "Major"
-  database: null
-  inactive: false
-  matches: []
-  authors: ""
+  abacResources: null
