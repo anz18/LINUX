@@ -1,44 +1,24 @@
 ---
 genPolicy: "None"
-openAPISpec: "http://13.56.210.25/v2/api-docs"
+openAPISpec: "http://13.56.210.25/v2/api"
 generators:
-- type: "DDOS"
-  assertions:
-  - "@StatusCode != 401"
-  - "@StatusCode != 404"
-  tags:
-  - "[PCI DSS 3.0] 6.5.2"
-  - "FX Top 10 - API Vulnerability"
-  severity: "Major"
+- type: "customize"
+  assertions: []
+  tags: null
+  severity: null
   database: null
-  inactive: true
+  inactive: false
   matches:
-  - name: "pageSize, page_size, maxResults, max_results"
+  - name: null
     value: null
     methods: null
     denyRoles: null
     allowRoles: null
     pathPatterns: null
-    resourceSamples: null
+    resourceSamples: "Get:/api/v1/alerts[Accept=application/json,Content-Type=application/json]\n\
+      Post:/api/v1/accounts[Accept: application/json,Content-Type: application/json]"
     queryParams: null
     bodyProperties: null
-  authors: ""
-  abacResources: null
-- type: "sql_injection_timebound"
-  assertions:
-  - "@ResponseTime < 7000 OR @ResponseTime > 10000"
-  - "@StatusCode != 404"
-  tags:
-  - "OWASP A1"
-  - "[PCI DSS 3.0] 6.5.1"
-  - "OWASP - OTG-INPVAL-005"
-  - "FX Top 10 - API Vulnerability"
-  severity: "Major"
-  database:
-    name: "MySQL"
-    version: "5.7"
-  inactive: true
-  matches: []
   authors: ""
   abacResources: null
 - type: "no_params"
@@ -77,7 +57,7 @@ generators:
     methods: null
     denyRoles: null
     allowRoles: null
-    pathPatterns: "Get:/api/v1/user-signup/**"
+    pathPatterns: ""
     resourceSamples: null
     queryParams: null
     bodyProperties: null
@@ -172,12 +152,58 @@ generators:
   inactive: false
   matches:
   - name: "ROLE_ADMIN,ROLE_PM,ROLE_USER"
-    value: null
+    value: "AutoMap"
     methods: null
     denyRoles: null
     allowRoles: null
     pathPatterns: null
     resourceSamples: "Get:/api/v1/orgs/:Allowed[ROLE_ADMIN]\nPost:/api/v1/accounts/:Allowed[ROLE_ADMIN,ROLE_PM]"
+    queryParams: null
+    bodyProperties: null
+  authors: ""
+  abacResources: null
+- type: "abac"
+  assertions:
+  - "Create:@StatusCode == 200 OR @StatusCode == 201"
+  - "Disallowed:@StatusCode == 401 OR @StatusCode == 403"
+  tags:
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database: null
+  inactive: false
+  matches: []
+  authors: ""
+  abacResources: null
+- type: "abacpositive"
+  assertions:
+  - "Create:@StatusCode == 200 OR @StatusCode == 201"
+  - "Allowed:@StatusCode == 200 OR @StatusCode == 201"
+  tags:
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database: null
+  inactive: false
+  matches: []
+  authors: ""
+  abacResources: null
+- type: "DDOS"
+  assertions:
+  - "@StatusCode != 401"
+  - "@StatusCode != 404"
+  tags:
+  - "[PCI DSS 3.0] 6.5.2"
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database: null
+  inactive: false
+  matches:
+  - name: "pageSize, page_size, maxResults, max_results"
+    value: null
+    methods: null
+    denyRoles: null
+    allowRoles: null
+    pathPatterns: null
+    resourceSamples: null
     queryParams: null
     bodyProperties: null
   authors: ""
@@ -212,6 +238,58 @@ generators:
   database: null
   inactive: false
   matches: []
+  authors: ""
+  abacResources: null
+- type: "sql_injection_timebound"
+  assertions:
+  - "@ResponseTime < 7000 OR @ResponseTime > 10000"
+  - "@StatusCode != 404"
+  tags:
+  - "OWASP A1"
+  - "[PCI DSS 3.0] 6.5.1"
+  - "OWASP - OTG-INPVAL-005"
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database:
+    name: "MySQL"
+    version: "5.7"
+  inactive: false
+  matches:
+  - name: null
+    value: null
+    methods: null
+    denyRoles: null
+    allowRoles: null
+    pathPatterns: null
+    resourceSamples: "User-Create"
+    queryParams: null
+    bodyProperties: "id,name"
+  authors: ""
+  abacResources: null
+- type: "no_sql_injection_timebound"
+  assertions:
+  - "@ResponseTime < 7000 OR @ResponseTime > 10000"
+  - "@StatusCode != 404"
+  tags:
+  - "OWASP A1"
+  - "[PCI DSS 3.0] 6.5.1"
+  - "OWASP - OTG-INPVAL-005"
+  - "FX Top 10 - API Vulnerability"
+  severity: "Major"
+  database:
+    name: "MongoDB"
+    version: "4.0"
+  inactive: false
+  matches:
+  - name: null
+    value: null
+    methods: null
+    denyRoles: null
+    allowRoles: null
+    pathPatterns: null
+    resourceSamples: "User-Create"
+    queryParams: null
+    bodyProperties: "id,name"
   authors: ""
   abacResources: null
 - type: "invalid_datatype"
