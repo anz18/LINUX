@@ -2,14 +2,14 @@
 # Note - The below property order is not important.
 
 # Test Suite should be unique per project.
-name: GET 
+name: GET
 
 # Folder path
 # parent: com.company.project.feature.functional
 
 # Optional - one or more author names
-authors: 
-  #- Developer 1
+authors:
+  - AFRA
   #- Developer 2
 
 # Suite type - SUITE or ABSTRACT
@@ -39,7 +39,6 @@ headers:
 # One ore more test cases when using POST, PUT, & DELETE methods.
 # Every test-case has unique id and a body (json) properties.
 # Data-Injection in-build keywords (@Random, @RandomAlphabetic, @RandomAlphanumeric, @RandomNumeric, @Date, @RandomUUID, @Vault)
-
 
 
 # Assertions - One or more.
